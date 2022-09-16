@@ -1,0 +1,934 @@
+{
+ "cells":[
+  {
+   "cell_type":"code",
+   "source":[
+    "d0 = \"Welcom to our first lab session\"\n",
+    "d1 = \"In this lab, you will lean more about Term Document Incidence Matrix\"\n",
+    "d2 = \"You will also learn how to visualize it\"\n",
+    "d3 = \"Hope you enjoy learning it\"\n",
+    "collection = {\"doc0\": d0,\n",
+    "\"doc1\": d1,\n",
+    "\"doc2\": d2,\n",
+    "\"doc3\": d3}\n",
+    "collection"
+   ],
+   "execution_count":1,
+   "outputs":[
+    {
+     "data":{
+      "text\/plain":[
+       "{'doc0': 'Welcom to our first lab session',\n",
+       " 'doc1': 'In this lab, you will lean more about Term Document Incidence Matrix',\n",
+       " 'doc2': 'You will also learn how to visualize it',\n",
+       " 'doc3': 'Hope you enjoy learning it'}"
+      ]
+     },
+     "metadata":{
+      
+     },
+     "output_type":"display_data"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"QIH9RWwWf6ZKmjIEK5t1It",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "boolean_operators = {'AND', 'OR', 'NOT'}"
+   ],
+   "execution_count":2,
+   "outputs":[
+    
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"ASJcFGCb3RU7ZwwICJf0Nj",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "#list of terms\n",
+    "def get_terms (data):\n",
+    "    terms=[]\n",
+    "    for doc in data:\n",
+    "        for term in data[doc].split() :\n",
+    "            terms.append(term)\n",
+    "    return terms\n",
+    "\n",
+    "#list of unique terms\n",
+    "def get_unique_terms(terms):\n",
+    "    unique_terms=[]\n",
+    "    for d in terms :\n",
+    "        if d not in unique_terms:\n",
+    "            unique_terms.append(d)\n",
+    "    return unique_terms\n",
+    "\n",
+    "#document collection terms\n",
+    "def get_document_collection_terms(data):\n",
+    "    docs_colllection={}\n",
+    "    for doc in data:\n",
+    "        if doc not in boolean_operators :\n",
+    "            docs_colllection[doc]=get_unique_terms(data[doc].split())\n",
+    "    return docs_colllection\n",
+    "\n",
+    "def display_dict(dic):\n",
+    "    print(\"\\n\")\n",
+    "    for i in dic:\n",
+    "        print (i , \" : \" ,dic[i])\n",
+    "    print(\"\\n\")"
+   ],
+   "execution_count":3,
+   "outputs":[
+    
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"YYfwt4WzSPKqqeCK9mKXZw",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "#print our collection\n",
+    "print(\"### documents content ###\")\n",
+    "display_dict(collection)"
+   ],
+   "execution_count":4,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "### documents content ###\n",
+      "\n",
+      "\n",
+      "doc0  :  Welcom to our first lab session\n",
+      "doc1  :  In this lab, you will lean more about Term Document Incidence Matrix\n",
+      "doc2  :  You will also learn how to visualize it\n",
+      "doc3  :  Hope you enjoy learning it\n",
+      "\n",
+      "\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"3JIlhT3Io1o7O85oEsjFfN",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "#print the terms available in the collection\n",
+    "print (\"\\n### Terms in all docs ###\\n\" , *get_terms(collection) ,sep= \" \\n \")"
+   ],
+   "execution_count":5,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "\n",
+      "### Terms in all docs ###\n",
+      " \n",
+      " Welcom \n",
+      " to \n",
+      " our \n",
+      " first \n",
+      " lab \n",
+      " session \n",
+      " In \n",
+      " this \n",
+      " lab, \n",
+      " you \n",
+      " will \n",
+      " lean \n",
+      " more \n",
+      " about \n",
+      " Term \n",
+      " Document \n",
+      " Incidence \n",
+      " Matrix \n",
+      " You \n",
+      " will \n",
+      " also \n",
+      " learn \n",
+      " how \n",
+      " to \n",
+      " visualize \n",
+      " it \n",
+      " Hope \n",
+      " you \n",
+      " enjoy \n",
+      " learning \n",
+      " it\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"C0vfo6nS0XwwZ6tTowEFnQ",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "#print the unique_terms available in the collection\n",
+    "terms=get_terms(collection)\n",
+    "print (\"\\n### Unique Terms in 5 DOCs###\\n\", *get_unique_terms(terms) ,sep=\" | \")"
+   ],
+   "execution_count":6,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "\n",
+      "### Unique Terms in 5 DOCs###\n",
+      " | Welcom | to | our | first | lab | session | In | this | lab, | you | will | lean | more | about | Term | Document | Incidence | Matrix | You | also | learn | how | visualize | it | Hope | enjoy | learning\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"0ANuRM69brpyl8ylI1VdeH",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "#print the unique terms in each collection in a dictionary format\n",
+    "print (\"\\n###Document terms Collection ###\" )\n",
+    "display_dict(get_document_collection_terms(collection))"
+   ],
+   "execution_count":7,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "\n",
+      "###Document terms Collection ###\n",
+      "\n",
+      "\n",
+      "doc0  :  ['Welcom', 'to', 'our', 'first', 'lab', 'session']\n",
+      "doc1  :  ['In', 'this', 'lab,', 'you', 'will', 'lean', 'more', 'about', 'Term', 'Document', 'Incidence', 'Matrix']\n",
+      "doc2  :  ['You', 'will', 'also', 'learn', 'how', 'to', 'visualize', 'it']\n",
+      "doc3  :  ['Hope', 'you', 'enjoy', 'learning', 'it']\n",
+      "\n",
+      "\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"pz8v2bCZEj7Qx0MKuAZDfq",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "#this function takes the collection of documents in a form of dictionary as an input\n",
+    "def term_document_incidence_matrix(collection):\n",
+    "    ## list of terms from the data file collection\n",
+    "    terms = get_terms(collection)\n",
+    "    #list of unique terms\n",
+    "    uique_terms = get_unique_terms(terms)\n",
+    "    #Document collection terms\n",
+    "    docs_terms=get_document_collection_terms(collection)\n",
+    "    #TermDocumentIncidenceMatrix\n",
+    "    term_docs_matrix= { }\n",
+    "    for term in uique_terms :\n",
+    "        vector=[]\n",
+    "        for c in docs_terms:\n",
+    "            if term in docs_terms[c]:\n",
+    "                vector.append(1)\n",
+    "            else :\n",
+    "                vector.append(0)\n",
+    "\n",
+    "        term_docs_matrix[term]=vector\n",
+    "    return term_docs_matrix\n",
+    "\n",
+    "#this fucntion takes a term and a terms-document incidence matrix and returns the inc\n",
+    "#this function just for explanation and display purposes\n",
+    "def term_incidence_vector(term,term_docs_incid_matrix):\n",
+    "    try:\n",
+    "        return term_docs_incid_matrix[term]\n",
+    "    except:\n",
+    "        return \"term not found\"\n",
+    "#build the term-document incidence matrix\n",
+    "term_docs_incid_matrix=term_document_incidence_matrix(collection)\n",
+    "print(\"Term-Document incidence Matrix\\n\")\n",
+    "#formatted Display\n",
+    "display_dict(term_docs_incid_matrix)"
+   ],
+   "execution_count":8,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "Term-Document incidence Matrix\n",
+      "\n",
+      "\n",
+      "\n",
+      "Welcom  :  [1, 0, 0, 0]\n",
+      "to  :  [1, 0, 1, 0]\n",
+      "our  :  [1, 0, 0, 0]\n",
+      "first  :  [1, 0, 0, 0]\n",
+      "lab  :  [1, 0, 0, 0]\n",
+      "session  :  [1, 0, 0, 0]\n",
+      "In  :  [0, 1, 0, 0]\n",
+      "this  :  [0, 1, 0, 0]\n",
+      "lab,  :  [0, 1, 0, 0]\n",
+      "you  :  [0, 1, 0, 1]\n",
+      "will  :  [0, 1, 1, 0]\n",
+      "lean  :  [0, 1, 0, 0]\n",
+      "more  :  [0, 1, 0, 0]\n",
+      "about  :  [0, 1, 0, 0]\n",
+      "Term  :  [0, 1, 0, 0]\n",
+      "Document  :  [0, 1, 0, 0]\n",
+      "Incidence  :  [0, 1, 0, 0]\n",
+      "Matrix  :  [0, 1, 0, 0]\n",
+      "You  :  [0, 0, 1, 0]\n",
+      "also  :  [0, 0, 1, 0]\n",
+      "learn  :  [0, 0, 1, 0]\n",
+      "how  :  [0, 0, 1, 0]\n",
+      "visualize  :  [0, 0, 1, 0]\n",
+      "it  :  [0, 0, 1, 1]\n",
+      "Hope  :  [0, 0, 0, 1]\n",
+      "enjoy  :  [0, 0, 0, 1]\n",
+      "learning  :  [0, 0, 0, 1]\n",
+      "\n",
+      "\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"8KPZmpleDn8I2KvaTzPosj",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "print(\"Incidence Vector of 'Matrix' \",term_incidence_vector('Matrix',term_docs_incid_matrix))"
+   ],
+   "execution_count":9,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "Incidence Vector of 'Matrix'  [0, 1, 0, 0]\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"P6dx4ZmTpQt2AMiHWizJtj",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "#Query Filteration\n",
+    "#input : Query\n",
+    "#output : List of terms of a given query which match with the terms in our collection\n",
+    "def query_filteration(query,collection):\n",
+    "    terms= get_terms(collection)\n",
+    "    unique_terms=get_unique_terms(terms)\n",
+    "    qterms=[]\n",
+    "    splitted_query=query.split()\n",
+    "    for qterm in splitted_query:\n",
+    "        if qterm in unique_terms or qterm in boolean_operators:\n",
+    "            qterms.append(qterm)\n",
+    "    return qterms"
+   ],
+   "execution_count":10,
+   "outputs":[
+    
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"Yr477zWQDQ5mK8hADbfYOS",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "query=\"learn AND Matrix AND you\"\n",
+    "qterms=query_filteration(query,collection)\n",
+    "print(qterms)"
+   ],
+   "execution_count":11,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "['learn', 'AND', 'Matrix', 'AND', 'you']\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"eeaRMdUp7OZnzuYNlSNSTE",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "#and should be capitalized and اليمن is not in our collection\n",
+    "query=\"learn and Matrix AND Taibah\"\n",
+    "qterms=query_filteration(query,collection)\n",
+    "print(qterms)"
+   ],
+   "execution_count":12,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "['learn', 'Matrix', 'AND']\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"4rV97nb96YyEfbGEHeOBTZ",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "#Boolean Operator Processing\n",
+    "# input : Boolean Operator ,Next term Incedence Vector ,Previous term Incedence Vector ,previous term Incedence Vector\n",
+    "def boolean_operator_processing(bool_operator,prevV,nextV):\n",
+    "    if bool_operator == \"AND\":\n",
+    "       return [a & b for a, b in zip(prevV, nextV)]\n",
+    "    elif bool_operator==\"OR\" :\n",
+    "        return [a | b for a, b in zip(prevV, nextV)]\n",
+    "    elif bool_operator == \"NOT\":\n",
+    "        return [1-a for a in prevV]"
+   ],
+   "execution_count":13,
+   "outputs":[
+    
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"AwKTGwl4j7ovkv6NOGjppS",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "v1=term_incidence_vector('learn',term_docs_incid_matrix)\n",
+    "v2=term_incidence_vector('Matrix',term_docs_incid_matrix)\n",
+    "v3=[]\n",
+    "print('v1',v1)\n",
+    "print('v2',v2)"
+   ],
+   "execution_count":14,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "v1 [0, 0, 1, 0]\n",
+      "v2 [0, 1, 0, 0]\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"zAMu3AOvE61hQlp0tLMT7E",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "print(boolean_operator_processing(\"AND\",v1,v2))"
+   ],
+   "execution_count":15,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "[0, 0, 0, 0]\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"nr36fg4OzfUsVDsdYJnk1Z",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "print(boolean_operator_processing(\"OR\",v1,v2))"
+   ],
+   "execution_count":16,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "[0, 1, 1, 0]\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"SnyKu1vu6LpzvLHHKKvPKh",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "print(boolean_operator_processing(\"NOT\",v1,v3))"
+   ],
+   "execution_count":17,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "[1, 1, 0, 1]\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"fps6DaAUxkjSyVpfui06fi",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "# Boolean retrieval function\n",
+    "# input : Query\n",
+    "def boolean_retrieval(query,collection):\n",
+    "    #build a terms_documents incidence matrix\n",
+    "    term_docs_incid_matrix=term_document_incidence_matrix(collection)\n",
+    "    bitwiseop=\"\"\n",
+    "    #get the query terms\n",
+    "    qterms=query_filteration(query,collection)\n",
+    "    result=[]\n",
+    "    result_set={}\n",
+    "    has_previous_term=False\n",
+    "    has_not_operation=False\n",
+    "    inc_vec_prev=[]\n",
+    "    inc_vec_next=[]\n",
+    "    for term in qterms :\n",
+    "        if term not in boolean_operators:\n",
+    "            if has_not_operation:\n",
+    "                if has_previous_term:\n",
+    "                    inc_vec_next=boolean_operator_processing(\"NOT\",term_docs_incid_matrix[term],inc_vec_next)\n",
+    "                else :\n",
+    "                    inc_vec_prev=boolean_operator_processing(\"NOT\",term_docs_incid_matrix[term],inc_vec_next)\n",
+    "                    result=inc_vec_prev\n",
+    "                has_not_operation=False\n",
+    "            elif has_previous_term:\n",
+    "                inc_vec_next=term_docs_incid_matrix[term]\n",
+    "            else :\n",
+    "                inc_vec_prev=term_docs_incid_matrix[term]\n",
+    "                result= inc_vec_prev\n",
+    "                has_previous_term=True\n",
+    "\n",
+    "        elif term==\"NOT\":\n",
+    "          has_not_operation=True\n",
+    "        else :\n",
+    "          bitwiseop=term\n",
+    "        if len(inc_vec_next)!= 0 :\n",
+    "            result = boolean_operator_processing(bitwiseop,inc_vec_prev,inc_vec_next)\n",
+    "            inc_vec_prev=result\n",
+    "            has_previous_term=True\n",
+    "            inc_vec_next= []\n",
+    "    for i,doc in zip(result,collection):\n",
+    "      result_set[doc]=i\n",
+    "    return result_set"
+   ],
+   "execution_count":18,
+   "outputs":[
+    
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"iALw9e0VPWK88zB0B5mjBW",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "collection"
+   ],
+   "execution_count":19,
+   "outputs":[
+    {
+     "data":{
+      "text\/plain":[
+       "{'doc0': 'Welcom to our first lab session',\n",
+       " 'doc1': 'In this lab, you will lean more about Term Document Incidence Matrix',\n",
+       " 'doc2': 'You will also learn how to visualize it',\n",
+       " 'doc3': 'Hope you enjoy learning it'}"
+      ]
+     },
+     "metadata":{
+      
+     },
+     "output_type":"display_data"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"VZCVxUiZWuAvZcd6HfM5UR",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "query1 = \" Document OR lab OR learn\"\n",
+    "print(\"query1 boolean retrieval \",boolean_retrieval(query1,collection))"
+   ],
+   "execution_count":20,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "query1 boolean retrieval  {'doc0': 1, 'doc1': 1, 'doc2': 1, 'doc3': 0}\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"SYjsTpvTWPzkiPluTb9Sus",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "v1=term_incidence_vector(\"Document\",term_docs_incid_matrix)\n",
+    "v1"
+   ],
+   "execution_count":21,
+   "outputs":[
+    {
+     "data":{
+      "text\/plain":[
+       "[0, 1, 0, 0]"
+      ]
+     },
+     "metadata":{
+      
+     },
+     "output_type":"display_data"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"eda958xE8fn7NCwthwu26k",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "v2=term_incidence_vector(\"lab\",term_docs_incid_matrix)\n",
+    "v2"
+   ],
+   "execution_count":22,
+   "outputs":[
+    {
+     "data":{
+      "text\/plain":[
+       "[1, 0, 0, 0]"
+      ]
+     },
+     "metadata":{
+      
+     },
+     "output_type":"display_data"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"YdD9tiMnGCsKL9So8B7r1g",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "Qpart1=boolean_operator_processing(\"OR\",v1,v2)\n",
+    "Qpart1"
+   ],
+   "execution_count":23,
+   "outputs":[
+    {
+     "data":{
+      "text\/plain":[
+       "[1, 1, 0, 0]"
+      ]
+     },
+     "metadata":{
+      
+     },
+     "output_type":"display_data"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"W54kh9vBauvxB5X7ByLbvh",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "v3=term_incidence_vector(\"learn\",term_docs_incid_matrix)\n",
+    "v3"
+   ],
+   "execution_count":24,
+   "outputs":[
+    {
+     "data":{
+      "text\/plain":[
+       "[0, 0, 1, 0]"
+      ]
+     },
+     "metadata":{
+      
+     },
+     "output_type":"display_data"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"5dhZSs03MzeESaiGy15BRL",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "boolean_operator_processing(\"OR\",Qpart1,v3)"
+   ],
+   "execution_count":25,
+   "outputs":[
+    {
+     "data":{
+      "text\/plain":[
+       "[1, 1, 1, 0]"
+      ]
+     },
+     "metadata":{
+      
+     },
+     "output_type":"display_data"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"CeTiTsW22h3qVn7XEgUsVO",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "collection"
+   ],
+   "execution_count":26,
+   "outputs":[
+    {
+     "data":{
+      "text\/plain":[
+       "{'doc0': 'Welcom to our first lab session',\n",
+       " 'doc1': 'In this lab, you will lean more about Term Document Incidence Matrix',\n",
+       " 'doc2': 'You will also learn how to visualize it',\n",
+       " 'doc3': 'Hope you enjoy learning it'}"
+      ]
+     },
+     "metadata":{
+      
+     },
+     "output_type":"display_data"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"ILo1Bhfv6iDPGPvCnl31Hg",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    "query2 = \"Lean AND Matrix AND NOT lab\"\n",
+    "print(\"query2 boolean retrieval \",boolean_retrieval(query2,collection))"
+   ],
+   "execution_count":27,
+   "outputs":[
+    {
+     "name":"stdout",
+     "text":[
+      "query2 boolean retrieval  {'doc0': 0, 'doc1': 1, 'doc2': 0, 'doc3': 0}\n"
+     ],
+     "output_type":"stream"
+    }
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"0JLAWg1QhOywZIhnyQ3WBB",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  },
+  {
+   "cell_type":"code",
+   "source":[
+    
+   ],
+   "execution_count":null,
+   "outputs":[
+    
+   ],
+   "metadata":{
+    "datalore":{
+     "node_id":"c3xoQcZl7qH6ocU9kYiDtz",
+     "type":"CODE",
+     "hide_input_from_viewers":false,
+     "hide_output_from_viewers":false
+    }
+   }
+  }
+ ],
+ "metadata":{
+  "kernelspec":{
+   "display_name":"Python",
+   "language":"python",
+   "name":"python"
+  },
+  "datalore":{
+   "version":1,
+   "computation_mode":"JUPYTER",
+   "package_manager":"pip",
+   "base_environment":"default",
+   "packages":[
+    
+   ]
+  }
+ },
+ "nbformat":4,
+ "nbformat_minor":4
+}
